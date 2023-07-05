@@ -29,6 +29,7 @@ class Account(models.Model):
     type_of_person = models.CharField(max_length=2, choices=types_of_person)
     value = models.FloatField()
     icon = models.ImageField(upload_to='icons')
+    created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__ (self): 
         return self.nickname
