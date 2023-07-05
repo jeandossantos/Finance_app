@@ -10,6 +10,16 @@
     <br>
     <br>
     <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert {{ message.tags }} role="alert">
+                <div>
+                 {{ message }}
+                </div>
+              </div>
+
+            {% endfor %}
+        {% endif %}
         <div class="row">
             <div class="col-md-5">
                 <p class="fonte-destaque">Suas contas</p>
@@ -17,20 +27,21 @@
 
                 <div class="contas">
 
+                    {% for account in accounts.data %}
                     
                         <div class="lista-contas-main">
-                            <span><img width="10%" src="#">&nbsp&nbspNubank</span>
+                            <span><img width="10%" src="{{ account.icon.url }}">&nbsp&nbsp{{ account.bank }}</span>
 
-                            <span class="total-conta positivo ">R$ 1.800,00&nbsp&nbsp&nbsp <a href="#"><img src="{% static 'perfil/img/exit.png' %}"></a></span>
+                            <span class="total-conta positivo ">R$ {{ account.value }}&nbsp&nbsp&nbsp <a href="{% url 'remove_account' id=account.id %}"><img src="{% static 'image/close.png' %}"></a></span>
                         </div>
                         <br>
-                    
+                    {% endfor %}
                     
                 </div>
 
                 <hr>
                 <span class="fonte-destaque">Total:</span>
-                <span class="positivo total-conta font-destaque">R$ 1.800,00</span>
+                <span class="positivo total-conta font-destaque">R$ {{ accounts.total }}</span>
             </div>
 
             <div class="col-md-2"></div>
@@ -38,28 +49,29 @@
             <div class="col-md-5">
                 <p class="fonte-destaque">Nova conta</p>
                 
-                <form action="" method="POST">
+                <form action="{% url 'create_account' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
                     <label>Apelido</label>
-                    <input type="text" name="apelido" class="form-control" placeholder="">
+                    <input type="text" name="nickname" class="form-control" placeholder="Como devo chama-lo?" required>
                     <br>
                     <label>Banco</label>
-                    <select name="banco" class="form-select">
+                    <select name="bank" class="form-select">
                         <option value="NU">Nubank</option>
                     </select>
                     <br>
                     <label>Tipo</label>
-                    <select name="tipo" class="form-select">
+                    <select required name="type_of_person" class="form-select">
                         <option value="pf">Pessoa física</option>
                         <option value="pj">Pessoa jurídica</option>
                     </select>
                     <br>
                     <label>Valor</label>
-                    <input type="number" name="valor" class="form-control" placeholder="">
+                    <input type="number" name="value" class="form-control" placeholder="" required>
                     <br>
-                    <input type="file" placeholder="Ícone" name="icone">
+                    <input type="file" placeholder="Ícone" name="icon" required>
                     <br>
                     <br>
-                    <input style="width: 100%" type="submit" class="botao-principal">
+                    <input style="width: 100%" type="submit" class="botao-principal" value="Salvar">
                 </form>
             </div>
         </div>
@@ -70,12 +82,14 @@
             <div class="col-md-5">
                 <span class="fonte-destaque">Nova categoria</span>
 
-                <form action="" method="POST">
+                <form action="{% url 'create_category' %}" 
+                method="POST">
+                {% csrf_token %}
                     <label>Categoria</label>
-                    <input type="text" name="categoria" class="form-control">
+                    <input type="text" name="name" required class="form-control">
                     <br>
 
-                    <input type="checkbox" name="essencial" value="essencial"><label class="positivo">&nbspEssencial</label>
+                    <input type="checkbox" name="essential" value="is_essential"><label class="positivo">&nbspEssencial</label>
                     <br>
                     <br>
                     <input style="width: 100%" type="submit" class="botao-principal" value="Adicionar">
@@ -90,13 +104,23 @@
                 <br>
                 <div class="contas">
 
+                    {% for category in categories %}
                     
-                        <div class="lista-contas-main">
-                            <span>Lazer</span>
+                    <div class="lista-contas-main">
+                        <span>{{ category.name }}</span>
 
-                            <span class="total-conta"><a href="#"><img src="#"></a></span>
-                        </div>
-                        <br>
+                        <span class="total-conta">
+                            {% if category.essential %}
+                                <a href="{% url 'toggle_category_essential' id=category.id %}"><img src="{% static 'image/check.png' %}"></a>
+                            {% else %}
+                                <a href="{% url 'toggle_category_essential' id=category.id %}"><img src="{% static 'image/close.png' %}"></a>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <br>
+
+                    {% endfor %}
+                        
                    
                     
                 </div>
