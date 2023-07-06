@@ -1,6 +1,6 @@
 
 def format_price(price):
-    return "{:.2f}".format(price)
+    return "{:.2f}".format(price).replace(".", ",")
 
 def getTotalPrice(objs, key):
     total = 0
