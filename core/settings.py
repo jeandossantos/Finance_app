@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user_profile',
-    'extract'
+    'extract',
+    'planning'
 ]
 
 MIDDLEWARE = [
