@@ -1,0 +1,61 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+{% block head %}
+
+    <title>Planejamento - FINANCE</title>
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <link href="{% static 'css/manage.css' %}" rel="stylesheet">
+    <link href="{% static 'css/view_extract.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block 'body' %}
+
+    <div class="container">
+        <br>
+        <br>
+        <p class="fonte-destaque">Definir planejamento</p>
+        <div class="card">
+        
+            <table>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Valor</th>
+                    <th>Ação</th>
+                </tr>
+
+                {% for category in categories %}
+                    <tr class="linha">
+                        <td>{{category.name}}</td>
+                        <td><input type="text" id="{{category.id}}" class="form-control" value="{{category.budget_price}}"></td>
+                        <td><button onclick="update_budge_price({{category.id}})" style="width: 100%;" class="botao-secundario">Salvar</button></td>         
+                    </tr>
+                {% endfor %}
+                
+
+            </table>
+        
+
+        </div>
+    </div>
+
+    <script>
+        function update_budge_price(id) {
+            let value = document.getElementById(id).value
+
+            fetch('/planning/update_category_budge_price/' +id, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    new_budge_price: value
+                })
+            }).then(res => res.json())
+            .then(res => console.log(res))
+        }
+    </script>
+
+
+
+{% endblock %}

@@ -32,4 +32,4 @@ class Account(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__ (self): 
-        return self.nickname
+        return f"{self.id} {self.nickname}"
