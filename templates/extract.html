@@ -1,0 +1,45 @@
+{% load static %}
+
+{% block head %}
+    <title>Ver extrato - FINANCE</title>
+   <style type="text/css">
+    
+   </style>
+
+{% endblock %}
+
+
+
+<div class="card">
+    
+    <table>
+        <tr>
+            <th>Conta</th>
+            <th>Categoria</th>
+            <th>Data</th>
+            <th>Tipo</th>
+            <th>valor</th>
+            
+        </tr>
+        {% for flow in cash_flow %}
+            <tr class="linha">
+                <td width="10%">{{flow.account}}</td>
+                <td>{{flow.category}}</td>
+                <td>{{flow.date}}</td>
+                <td>
+                {% if flow.type_cash_flow == 'out' %}
+                    <img src="{% static 'image/arrow-down.png' %}">
+                {% else %}
+                    <img src="{% static 'image/arrow-up.png' %}">
+                {% endif %}
+                
+                </td>
+                <td>R$ {{flow.value}}</td>
+                
+            </tr>
+        {% endfor %}
+
+    </table>
+    
+
+</div>
