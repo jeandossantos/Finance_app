@@ -40,7 +40,6 @@ def update_category_budge_price(request, id):
 
 def view_planning(request):
     categories = Category.objects.all().order_by('name')
-    
     cashFlow = CashFlow.objects.filter(date__month=datetime.now().month).filter(type_cash_flow='out')
     
     categories.total_cash_flow = utils.getTotalPrice(cashFlow, 'value')
