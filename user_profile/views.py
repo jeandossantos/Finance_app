@@ -1,22 +1,51 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Account, Category
+from extract.models import CashFlow
+from bill.models import Bill, PaidBill
 
 from . import utils
 
+from datetime import datetime
+
 def home(request):
-    accounts = Account.objects.all().order_by('nickname')
+    CURRENT_MONTH = datetime.now().month
+    CURRENT_DAY = datetime.now().day
     
-    total = utils.getTotalPrice(accounts, 'value')
+    bills = Bill.objects.all()
+    # paid bills of the current month
+    paid_bills = PaidBill.objects.filter(payment_date__month=CURRENT_MONTH).values('bill')
+    
+    # unpaid bills of this month (overdue) (vencidas!)
+    unpaid_bills = bills.filter(payment_day__lt=CURRENT_DAY).exclude(id__in=paid_bills)
+    
+    # approaching bills within 5 days
+    approaching_bills = bills.filter(payment_day__gte=CURRENT_DAY).filter(
+        payment_day__lte=CURRENT_DAY + 5
+    ).exclude(id__in=paid_bills)
+    
+    accounts = Account.objects.all().order_by('nickname')
+    accounts.total = utils.getTotalPrice(accounts, 'value')
+    
+    cash_flow = CashFlow.objects.filter(date__month=datetime.now().month)
+    in_flow = cash_flow.filter(type_cash_flow='in')
+    out_flow = cash_flow.filter(type_cash_flow='out')
+    total_in_flow = utils.getTotalPrice(in_flow, 'value')    
+    total_out_flow = utils.getTotalPrice(out_flow, 'value')
+    
+    percentual_essential_spent, percentual_not_essential_spent = utils.get_financial_balance()    
     
     for account in accounts: 
         account.value = utils.format_price(account.value)
     
     return render(request, 'home.html', {
-        'accounts': {
-            'data': accounts,
-            'total': total            
-        }
+            'accounts': accounts,
+            'total_in_flow': total_in_flow,
+            'total_out_flow': total_out_flow,
+            'percentual_essential_spent': percentual_essential_spent,
+            'percentual_not_essential_spent': percentual_not_essential_spent,
+            'unpaid_bills': len(unpaid_bills),
+            'approaching_bills': len(approaching_bills)
     })
 
 def manage(request): 
@@ -106,4 +135,16 @@ def toggle_category_essential(request, id):
     
     return redirect('/profile/manage/')
         
+def dashboard(request):
+    data = {}
     
+    categories = Category.objects.all()
+    
+    for category in categories:
+        total_spent = CashFlow.objects.filter(category=category)
+        data[category.name] = utils.format_price_string_to_float(utils.getTotalPrice(total_spent, 'value'))
+    
+    return render(request, 'dashboard.html', {
+        'labels': list(data.keys()),
+        'values': list(data.values())
+    })

@@ -7,11 +7,14 @@
   <br />
   <div class="row">
     <div class="col-md-3">
-      <a style="text-decoration: none; color: white" href="#">
+      <a
+        style="text-decoration: none; color: white"
+        href="{% url 'add_new_value' %}"
+      >
         <div class="card">
           <div class="row">
             <div class="col-md-8">
-              <span class="fonte-destaque">RS 1.000,00</span>
+              <span class="fonte-destaque">RS {{ total_in_flow }}</span>
             </div>
             <div class="col-md">
               <img
@@ -24,11 +27,14 @@
       </a>
     </div>
     <div class="col-md-3">
-      <a style="text-decoration: none; color: white" href="#">
+      <a
+        style="text-decoration: none; color: white"
+        href="{% url 'add_new_value' %}"
+      >
         <div class="card">
           <div class="row">
             <div class="col-md-8">
-              <span class="fonte-destaque">RS 1.000,00</span>
+              <span class="fonte-destaque">RS {{ total_out_flow }}</span>
             </div>
             <div class="col-md">
               <img
@@ -55,17 +61,17 @@
         <hr class="hr-borda" />
         <span class="fonte-destaque">Suas contas</span>
 
-        {% for account in accounts.data %}
+        {% for account in accounts %}
         <div class="div-contas">
           <div class="lista-conta">
             <span>{{ account.nickname }}</span>
             <span class="total-conta">R$ {{ account.value }}</span>
+          </div>
+          <br />
         </div>
-        <br />
-    </div>
-    {% endfor %}
-    <hr class="hr-borda" />
-    <a href="{% url 'manage' %}" class="botao-principal"
+        {% endfor %}
+        <hr class="hr-borda" />
+        <a href="{% url 'manage' %}" class="botao-principal"
           >Gerenciar contas</a
         >
       </div>
@@ -105,7 +111,13 @@
           <span class="fonte-destaque">Planejamento</span>
         </div>
         <hr class="hr-borda" />
-        <a href="#" class="botao-principal">Definir planejamento</a>
+        <a href="{% url 'create_planning' %}" class="botao-principal"
+          >Definir planejamento</a
+        >
+        <hr />
+        <a href="{% url 'view_planning' %}" class="botao-principal"
+          >Ver planejamento</a
+        >
       </div>
     </div>
     <div class="col-md-8">
@@ -118,7 +130,7 @@
           <div
             class="progress-bar progress-bar-striped bg-info"
             role="progressbar"
-            style="width: 20%"
+            style="width: {{percentual_essential_spent}}%"
             aria-valuenow="50"
             aria-valuemin="0"
             aria-valuemax="100"
@@ -130,7 +142,7 @@
           <div
             class="progress-bar progress-bar-striped bg-info"
             role="progressbar"
-            style="width: 40%"
+            style="width: {{percentual_not_essential_spent}}%"
             aria-valuenow="50"
             aria-valuemin="0"
             aria-valuemax="100"
@@ -138,7 +150,9 @@
         </div>
 
         <hr class="hr-borda" />
-        <a href="#" class="botao-principal">Alterar categorias essenciais</a>
+        <a href="{% url 'manage' %}" class="botao-principal"
+          >Alterar categorias essenciais</a
+        >
       </div>
     </div>
   </div>
@@ -152,14 +166,16 @@
         <hr class="hr-borda" />
 
         <span class="fonte-destaque">Próximas do vencimento</span>
-        <span class="fonte-light">3 contas próximas do vencimento</span>
+        <span class="fonte-light"
+          >{{ approaching_bills }} contas próximas do vencimento</span
+        >
         <br />
         <span class="fonte-destaque negativo">Vencidas</span>
-        <span class="fonte-light">0 contas vencidas</span>
+        <span class="fonte-light">{{ unpaid_bills }} contas vencidas</span>
 
         <hr class="hr-borda" />
 
-        <a href="#" class="botao-principal">Ver mais</a>
+        <a href="{% url 'view_bills' %}" class="botao-principal">Ver mais</a>
       </div>
     </div>
   </div>
