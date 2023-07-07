@@ -6,7 +6,6 @@ from .models import Bill, PaidBill
 from user_profile.models import Category
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
-import json
 
 def add_bill(request):
     if request.method == 'GET':
