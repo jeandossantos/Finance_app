@@ -24,9 +24,7 @@ def get_financial_balance():
     not_essential_spent =CashFlow.objects.filter(date__month=datetime.now().month).filter(
         category__essential=False
     ).filter(type_cash_flow='out')
-    
-    print(essential_spent,not_essential_spent)
-    
+        
     total_essential_spent = format_price_string_to_float(getTotalPrice(essential_spent, 'value'))
     total_not_essential_spent = format_price_string_to_float(getTotalPrice(not_essential_spent, 'value'))
     total_spent = total_essential_spent + total_not_essential_spent
