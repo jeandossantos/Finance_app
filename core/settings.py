@@ -123,14 +123,15 @@ STATIC_URL = 'static/'
 
 # configuração de pasta de arquivos static
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-# ?? ?? ??
-#STATIC_ROOT = os.path.join('static')
 
-#configuração de pasta de arquivos de media (arquivos que o cliente envia para o server)
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# define a pasta que os arquivos estáticos vão ser colocados quando o comando "collectstatic" for rodado. 
+STATIC_ROOT = os.path.join(BASE_DIR,'staticFiles')
 
 # rota para acessar arquivos media
 MEDIA_URL = '/media/'
+
+#configuração de pasta de arquivos de media (arquivos que o cliente envia para o server)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
